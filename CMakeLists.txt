@@ -74,3 +74,39 @@ endif()
 ## Resources
 # Copy resources dirs into our shadow build directory
 file( COPY ${CMAKE_CURRENT_SOURCE_DIR}/resource DESTINATION ${CMAKE_BINARY_DIR} )
+
+
+# cmake generating deb - based on 
+# https://nowardev.wordpress.com/2009/12/27/how-to-create-a-debian-package-for-script-and-for-project-that-use-cmake/
+SET(MAJOR_VERSION 1)
+SET(MINOR_VERSION 0)
+SET(PATCH_VERSION 0)
+ 
+IF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
+INCLUDE(InstallRequiredSystemLibraries)
+ 
+SET(CPACK_SET_DESTDIR "on")
+SET(CPACK_PACKAGING_INSTALL_PREFIX "/tmp")
+SET(CPACK_GENERATOR "DEB")
+ 
+SET(CPACK_PACKAGE_DESCRIPTION "short description")
+SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "long description bla bla bla... bah")
+SET(CPACK_PACKAGE_VENDOR "Vendor")
+SET(CPACK_PACKAGE_CONTACT "developer ")
+SET(CPACK_PACKAGE_VERSION_MAJOR "${MAJOR_VERSION}")
+SET(CPACK_PACKAGE_VERSION_MINOR "${MINOR_VERSION}")
+SET(CPACK_PACKAGE_VERSION_PATCH "${PATCH_VERSION}")
+SET(CPACK_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${MAJOR_VERSION}.${MINOR_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}")
+SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${CMAKE_PROJECT_NAME}_${MAJOR_VERSION}.${MINOR_VERSION}.${CPACK_PACKAGE_VERSION_PATCH}")
+ 
+#SET(CPACK_DEBIAN_PACKAGE_DEPENDS " libqt4-dbus (>= 4.5.0), libqtcore4 (>= 4.5.0), libqtgui4 (>= 4.5.0), libstdc++6 (>= 4.2.1), libglu1-mesa-dev, xorg-dev, x11-apps")
+SET(CPACK_DEBIAN_PACKAGE_DEPENDS "libglu1-mesa-dev, xorg-dev, x11-apps")
+ 
+SET(CPACK_DEBIAN_PACKAGE_PRIORITY "optional")
+SET(CPACK_DEBIAN_PACKAGE_SECTION "devel")
+SET(CPACK_DEBIAN_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
+ 
+SET(CPACK_COMPONENTS_ALL Libraries ApplicationData)
+INCLUDE(CPack)
+ 
+ENDIF(EXISTS "${CMAKE_ROOT}/Modules/CPack.cmake")
